@@ -62,17 +62,17 @@ with :math:`C_1, C_2, C_3` denoting component concentrations.
 
 The `init` keyword specifies the initial configuration of the ternary system, and specifies the initial configuration of the ternary system. Based on the initial configuration, respective initialization parameters must also be provided (which are marked in `<>`). The supported initialization methods include:
 
-- `init mixture` — uniform random mixture of components 1, 2, 3.
+- `init mixture` — uniform random mixture of components 1, 2, 3. x
     
 - `init droplet radius <R>` — a spherical droplet of radius R units of one component immersed in a immiscible bath of another component. The location of the droplet is at the center of the box.
     
-- `init liquid_lens radius <R>` — two adjacent droplets
+- `init liquid_lens radius <R>` —  
     
 - `init double_emulsion radius <R>` — Double Emulsion with Janus template i.e., two droplets sharing an interface, immersed in a solvent. The double emulsion droplets  are composed of component 1 and component 2,  with each sphere having radius R. The solvent is composed purely of component 3. The location of the droplet is at the center of the box.
     
 - `init film thickness <th> <C1_film> <C2_film>` —  Film of thickness "th" with components 1 and 2 with volume fraction C1_film, C2_film occupying the box center (along z direction). The rest of the box are occupied by component 3.
     
-- `init mixed_droplet radius <R> <C1> <C2>` — a spherical droplet of radius R units comprised of the two components 1 and 2, with volume fraction of C1 and C2,  immersed in  component 3. The location of the droplet is located at the center of the box.
+- `init mixed_droplet radius <R> <C1> <C2>` — a spherical droplet of radius R units comprised of the two components 1 and 2, with volume fraction of C1 and C2,  immersed in  component 3. The location of the droplet is located at the center of the box. x
 
 ## Parameters
 
@@ -83,8 +83,6 @@ This fix accepts several internal parameters specified in the source code:
 - `gamma_p`, `gamma_s` — parameters controlling the mobility of the phase variables phi, psi
     
 - `kappa_i` — parameters controlling the surface tension
-    
-- `C1`, `C2`, `C3` — component concentrations or volume fraction (as density of the system is fixed to be 1)
 
 Future versions may allow passing these directly via input script.
 
@@ -113,7 +111,23 @@ The fix supports output in `.xdmf` and `.raw` format which can then be post-proc
 - `fix lb/fluid`
 
 ## Default
-None.
+The default values for optional parameters are:
+
+* seed = 12345
+* alpha = 1.0
+* C1 = 0.333333
+* C2 = 0.333333
+* C3 = 0.333334
+* kappa1 = 0.01
+* kappa2 = 0.01
+* kappa3 = 0.01
+* tau_r = 1.0
+* tau_p = 1.0
+* tau_s = 0.666667
+* gamma_p = 1.0
+* gamma_s = 1.0
+* init = mixture
+
 ## Contact
 Ternary model implementation:
 
