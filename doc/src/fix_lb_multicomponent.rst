@@ -12,8 +12,8 @@ Syntax
 * lb/multicomponent = style name of this fix command
 * nevery = update the lattice-Boltzmann fluid every this many timesteps (should normally be 1)
 * viscosity = the fluid viscosity (units of mass/(time\*length))
-* density = the initial fluid density
-* D3Q19 = velocity lattice model (required)
+* density = the fluid density
+* D3Q19 = the only velocity vector set used in this fix (mandatory to mention)
 * dx = keyword for lattice spacing
 * dx_value = the lattice-Boltzmann grid spacing
 * zero or more keyword/value pairs may be appended
@@ -21,27 +21,26 @@ Syntax
 
   .. parsed-literal::
 
-       *tau_r* value = relaxation time for momentum transport (related to viscosity)
-       *tau_p* value = relaxation time for order parameter φ transport
-       *tau_s* value = relaxation time for order parameter ψ transport
-       *kappa1* value = surface tension parameter between components C1 and C2
-       *kappa2* value = surface tension parameter between components C1 and C3
-       *kappa3* value = surface tension parameter for component C3
-       *alpha* value = gradient energy coefficient
-       *gamma_p* value = mobility coefficient for order parameter φ
-       *gamma_s* value = mobility coefficient for order parameter ψ
-       *C1* value = bulk concentration of component 1
-       *C2* value = bulk concentration of component 2
-       *C3* value = bulk concentration of component 3 (note: C1 + C2 + C3 = 1)
-       *dumpxdmf* values = N filename timeI
+       *tau_r* value = relaxation time constant for the population distribution *f* - related to viscosity
+       *tau_p* value = relaxation time constant for the population distribution *g* - related to the mobility coefficient of the order parameter $\phi$
+       *tau_s* value = relaxation time constant for the population distribution *k* - related to the mobility coefficient of the order parameter $\psi$
+       *kappa1* value = energy gradient parameter for fluid 1 - used in surface tension calculation between fluid 1 and other fluids
+       *kappa2* value = energy gradient parameter for fluid 2 - used in surface tension calculation between fluid 2 and other fluids
+       *kappa3* value = energy gradient parameter for fluid 3 - used in surface tension calculation between fluid 3 and other fluids
+       *alpha* value = parameter related to the interface width measurement
+       *gamma_p* value = mobility coefficient for order parameter $\phi$
+       *gamma_s* value = mobility coefficient for order parameter $\psi$
+       *C1* value = bulk concentration of fluid component 1
+       *C2* value = bulk concentration of fluid component 2
+       *C3* value = bulk concentration of fluid component 3 (note: C1 + C2 + C3 = 1)
+       *dumpxdmf* values = N filename
            N = output fluid fields every N timesteps
            filename = base name for output files (.xdmf and .raw extensions added automatically)
-           timeI = 1 (use simulation time to index xdmf file), 0 (use output frame number)
-       *seed* value = random number generator seed (positive integer)
+       *seed* value = random number generator seed (positive integer) - useful to initialize certain models like ternary mixture, ternary film, and ternary droplet 
        *init* values = initialization_method [method_parameters]
            initialization_method = *mixture* or *droplet* or *liquid_lens* or *double_emulsion* or *film* or *mixed_droplet*
-               *mixture* = homogeneous mixture with random fluctuations
-               *droplet* radius = binary droplet (C1 and C2) of given radius in C3 solvent
+               *mixture* = well-mixed fluid mixture
+               *droplet* radius = droplet in a solvent model - droplet of fluid component 1 of given radius surrounded by fluid component 2 - droplet center is located at the center of the box
                *liquid_lens* radius = lens of C3 with given radius between C1 and C2 layers
                *double_emulsion* radius = Janus droplet (C1 and C2 hemispheres) of given radius in C3 solvent
                *film* thickness C1_film C2_film = ternary film with specified thickness and composition
@@ -62,9 +61,9 @@ Description
 
 .. versionadded:: 2024
 
-The **fix lb/multicomponent** command implements a ternary lattice Boltzmann model (LBM) for simulating multicomponent fluid mixtures in three dimensions. This fix is an extension of the single-component :doc:`fix lb/fluid <fix_lb_fluid>`, designed to capture more complex interfacial and phase behaviors such as droplets, emulsions, and films involving three interacting fluid components.
+The **fix lb/multicomponent** command implements a ternary lattice Boltzmann model (LBM) for simulating three-dimensional multicomponent fluid systems. This fix is an extension of the single-component :doc:`fix lb/fluid <fix_lb_fluid>`, designed to capture complex interfacial and phase behaviors of three immiscible fluid components for various fluid models like ternary mixture, droplets, and films.
 
-The algorithm evolves three coupled distribution functions over a D3Q19 lattice and models thermodynamic interactions via chemical potentials and free-energy gradients. The model is suitable for studying phase separation, interface dynamics, droplet stability, and multiphase coexistence.
+The algorithm evolves three distribution functions over a D3Q19 lattice and models thermodynamic interactions using the Landau-Ginzburg free-energy. This model is suitable for studying multi-component fluid interactions in the aspect of phase separation and interface dynamics.
 
 The implementation follows the work described in Arumugam Kumar et al., "Implementation of a Ternary Lattice Boltzmann Model in LAMMPS," Comput. Phys. Commun. 294, 108898 (2024).
 
@@ -72,7 +71,7 @@ The implementation follows the work described in Arumugam Kumar et al., "Impleme
 
 **Model Overview**
 
-The ternary fluid composition is specified by three concentration fields C₁, C₂, and C₃, which are related to conserved order parameters:
+The ternary fluid composition is specified by three concentration fields $C_1$, $C_2$, and $C_3$, which are related to conserved order parameters:
 
 .. math::
 
@@ -80,7 +79,7 @@ The ternary fluid composition is specified by three concentration fields C₁, C
    \phi &= C_1 - C_2 \\
    \psi &= C_3
 
-where ρ is the total density (approximately constant for incompressible flow), and φ and ψ are order parameters that distinguish the three components.
+where $\rho$ is the total density (approximately constant for incompressible flow), $\phi$ and \psi$ are order parameters that distinguish the three components.
 
 The time evolution is described by three sets of distribution functions (f, g, h) that evolve according to the Bhatnagar-Gross-Krook (BGK) lattice Boltzmann equation:
 
