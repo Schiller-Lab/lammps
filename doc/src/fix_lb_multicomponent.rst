@@ -107,7 +107,7 @@ The *init* keyword specifies how the ternary fluid is initialized:
 
 * **liquid_lens** *radius*: Creates a lens-shaped droplet of pure C3 with specified radius positioned at the interface between horizontal layers of pure C1 (top half) and pure C2 (bottom half).
 
-* **double_emulsion** *radius*: Creates a Janus-type double emulsion with a droplet of specified radius split into two hemispheres: left hemisphere of pure C1 and right hemisphere of pure C2, surrounded by pure C3 solvent.
+* **double_emulsion** *radius*: Creates a Janus-type double emulsion with a droplet of specified radius split into two hemispheres: left hemisphere of component 1 and right hemisphere of component 2, centered in the simulation box and surrounded by component 3 in bulk.
 
 * **film** *thickness* *C1_film* *C2_film*: Creates a horizontal film of specified thickness (as a fraction of the box height) centered in the simulation box with composition C1_film, C2_film, C3_film = 1 - C1_film - C2_film, surrounded by bulk mixture. Small random fluctuations (±0.01) are added to seed phase separation.
 
