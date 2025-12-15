@@ -109,7 +109,7 @@ The *init* keyword specifies how the ternary fluid is initialized:
 
 * **double_emulsion** *radius*: Creates a Janus-type double emulsion with a droplet of specified radius split into two hemispheres: left hemisphere of component 1 and right hemisphere of component 2, centered in the simulation box and surrounded by component 3 in bulk.
 
-* **film** *thickness* *C1_film* *C2_film*: Creates a horizontal film of specified thickness (as a fraction of the box height) centered in the simulation box with composition C1_film, C2_film, C3_film = 1 - C1_film - C2_film, surrounded by bulk mixture. Small random fluctuations (±0.01) are added to seed phase separation.
+* **film** *thickness* *C1_film* *C2_film*: Creates a horizontal film of specified thickness (as a fraction of the box height) centered in the simulation box with composition C1_film, C2_film, C3_film (C1_film + C2_film + C3_film = 1), surrounded by a bulk mixture of C1, C2, C3 (C1+C2+C3 = 1).
 
 * **mixed_droplet** *radius* *C1_drop* *C2_drop*: Creates a ternary droplet with specified radius and composition (C1_drop, C2_drop, C3_drop = 1 - C1_drop - C2_drop) surrounded by pure C3 solvent. Small random fluctuations (±0.01) are added within the droplet.
 
