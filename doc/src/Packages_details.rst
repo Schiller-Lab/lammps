@@ -1292,6 +1292,7 @@ The LATBOLTZ package requires that LAMMPS is build in :ref:`MPI parallel mode <s
 * :doc:`fix lb/fluid <fix_lb_fluid>`
 * :doc:`fix lb/momentum <fix_lb_momentum>`
 * :doc:`fix lb/viscous <fix_lb_viscous>`
+* :doc:`lb/multicomponent <fix_lb_multicomponent>`
 * examples/PACKAGES/latboltz
 
 ----------

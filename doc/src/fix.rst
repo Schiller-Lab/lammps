@@ -244,6 +244,7 @@ accelerated styles exist.
 * :doc:`lb/fluid <fix_lb_fluid>` -
 * :doc:`lb/momentum <fix_lb_momentum>` -
 * :doc:`lb/viscous <fix_lb_viscous>` -
+* :doc:`lb/multicomponent <fix_lb_multicomponent>` - mutlicomponent lattice boltzmann fluid dynamics simulation
 * :doc:`lineforce <fix_lineforce>` - constrain atoms to move in a line
 * :doc:`manifoldforce <fix_manifoldforce>` - restrain atoms to a manifold during minimization
 * :doc:`mdi/aimd <fix_mdi_aimd>` - LAMMPS operates as driver for ab initio MD (AIMD) via the MolSSI Driver Interface (MDI)
