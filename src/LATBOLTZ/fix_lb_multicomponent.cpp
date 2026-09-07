@@ -67,6 +67,47 @@ void FixLbMulticomponent::end_of_step()
   dump_xdmf(update->ntimestep);
 }
 
+void FixLbMulticomponent::get_total_momentum(double &jx, double &jy, double &jz)
+{
+  double local[3] = {0.0, 0.0, 0.0};
+  double global[3] = {0.0, 0.0, 0.0};
+    
+  for (int x = halo_extent[0]; x < subNbx - halo_extent[0]; ++x)
+    for (int y = halo_extent[1]; y < subNby - halo_extent[1]; ++y)
+      for (int z = halo_extent[2]; z < subNbz - halo_extent[2]; ++z)
+        for(int i = 0; i < numvel; ++i){
+            local[0] += f_lb[x][y][z][i] * e19[i][0];
+            local[1] += f_lb[x][y][z][i] * e19[i][1];
+            local[2] += f_lb[x][y][z][i] * e19[i][2];
+        }
+  
+  MPI_Reduce(local, global, 3, MPI_DOUBLE, MPI_SUM, 0, world);
+  
+  if (me == 0){
+    jx = global[0];
+    jy = global[1];
+    jz = global[2];
+  }
+}
+
+void FixLbMulticomponent::get_total_mass(double &m)
+{
+  double local = 0.0;
+  double global = 0.0;
+    
+  for (int x = halo_extent[0]; x < subNbx - halo_extent[0]; ++x)
+    for (int y = halo_extent[1]; y < subNby - halo_extent[1]; ++y)
+      for (int z = halo_extent[2]; z < subNbz - halo_extent[2]; ++z)
+        for(int i = 0; i < numvel; ++i){
+            local += f_lb[x][y][z][i];
+        }
+  
+  MPI_Reduce(&local, &global, 1, MPI_DOUBLE, MPI_SUM, 0, world);
+  
+  if (me == 0)   
+    m = global;
+}
+
 void FixLbMulticomponent::lb_update()
 {
 
@@ -506,7 +547,7 @@ void FixLbMulticomponent::init_droplet(double radius)
       for (z = 0; z < subNbz; z++) {
         pos[2] = domain->sublo[2] + (z - halo_extent[2]) * dx_lb;
         r2 = pos[0] * pos[0] + pos[1] * pos[1] + pos[2] * pos[2];
-        phi = r2 < radius * radius ? 1.0 : -1.0;
+        phi = r2 < radius * radius ? 1.0 - 0.000125 : -1.0 + 0.000125;
         for (i = 0; i < numvel; i++) {
           f_lb[x][y][z][i] = w_lb19[i] * rho * densityinit;
           g_lb[x][y][z][i] = w_lb19[i] * phi * densityinit;

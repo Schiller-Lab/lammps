@@ -1,0 +1,11 @@
+---
+lammps_version: 27 Dec 2024
+tags: generated
+date_generated: Thu Aug 27 14:52:39 2026
+epsilon: 1e-14
+skip_tests:
+prerequisites: ! ""
+pre_commands: ! ""
+post_commands: ! ""
+input_file:
+...

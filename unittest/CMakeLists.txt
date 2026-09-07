@@ -98,6 +98,7 @@ add_subdirectory(fortran)
 add_subdirectory(python)
 add_subdirectory(tools)
 add_subdirectory(force-styles)
+add_subdirectory(latboltz)
 
 # clang-format support for test sources
 

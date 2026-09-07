@@ -63,6 +63,8 @@ class FixLbMulticomponent : public FixLbFluid {
   int setmask() override;
   void initial_integrate(int) override;
   void end_of_step() override;
+  void get_total_momentum(double &, double &, double &);
+  void get_total_mass(double &);
 
  private:
   double tau_r, tau_p, tau_s;

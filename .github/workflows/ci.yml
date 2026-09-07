@@ -1,0 +1,31 @@
+name: ctest CI
+
+on: 
+  pull_request:
+    branches:
+      - ternary-lbm
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+            sudo apt-get install -y openmpi-bin libopenmpi-dev
+
+      - name: Configure with tests
+        run: |
+          cmake -S cmake -B build -D BUILD_MPI=yes \
+                -D PKG_LATBOLTZ=yes \
+                -D ENABLE_TESTING=yes
+                
+      - name: Build
+        run: |
+          cmake --build build -j4
+          
+      - name: Run tests
+        run: ctest --test-dir build -R 'FixLBMulticomponent:plain' --output-on-failure
