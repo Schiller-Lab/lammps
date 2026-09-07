@@ -547,7 +547,7 @@ void FixLbMulticomponent::init_droplet(double radius)
       for (z = 0; z < subNbz; z++) {
         pos[2] = domain->sublo[2] + (z - halo_extent[2]) * dx_lb;
         r2 = pos[0] * pos[0] + pos[1] * pos[1] + pos[2] * pos[2];
-        phi = r2 < radius * radius ? 1.0 : -1.0;
+        phi = r2 < radius * radius ? 1.0 - 0.000125 : -1.0 + 0.000125;
         for (i = 0; i < numvel; i++) {
           f_lb[x][y][z][i] = w_lb19[i] * rho * densityinit;
           g_lb[x][y][z][i] = w_lb19[i] * phi * densityinit;
